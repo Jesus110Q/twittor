@@ -1,11 +1,11 @@
-importScripts('js/sww.js');
+importScripts('js/sww.js')
 
 const STATIC_CACHE = 'static-v2';
 const DYNAMIC_CACHE = 'dynamic-v1';
 const INMUTABLE_CACHE = 'inmutable-v1';
 
 const APP_SHELL = [
-  //'/',
+  '/',
   'index.html',
   'css/style.css',
   'img/favicon.ico',
@@ -15,7 +15,7 @@ const APP_SHELL = [
   'img/avatars/thor.jpg',
   'img/avatars/wolverine.jpg',
   'js/app.js',
-  'js/sww.js'
+  'js/sw-sww.js'
 ];
 
 const APP_SHELL_INMUTABLE = [
@@ -46,21 +46,25 @@ self.addEventListener('activate', (e) => {
             if (key !== STATIC_CACHE && key.includes('static')) {
                 return caches.delete(key);
             }
+
+
+                   if (key !== DYNAMIC_CACHE && key.includes('dinamic')) {
+                return caches.delete(key);
+            }
         });
     });
     e.waitUntil(respuesta);
 });
 
-self.addEventListener('fetch', e =>{
+self.addEventListener('fetch', e=>{
 
 	const respuesta = caches.match(e.request).then(res =>{
 		if(res){
 			return res;
 		}else{
-
 			return fetch(e.request).then(newRes =>{
 
-				return actualizaCacheDinamico(DYNAMIC_CACHE, e.request, newRes);
+				return  actualizaCacheDinamico(DYNAMIC_CACHE, e.request, newRes);
 			});
 		}
 	});
